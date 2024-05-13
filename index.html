@@ -1,2 +1,67 @@
-<p>Hello 大家好</p>
-<p>我是，这是我的个人网站。 </p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自动摘要生成器</title>
+</head>
+<body>
+    <h1>自动摘要生成器</h1>
+    <form id="urlForm">
+        <input type="text" id="urlInput" placeholder="请输入网址" required>
+        <button type="submit">生成摘要</button>
+    </form>
+    <div id="summaryOutput"></div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f7f7f7;
+}
+
+h1 {
+    text-align: center;
+}
+
+#urlForm {
+    margin: 20px auto;
+    width: 50%;
+    text-align: center;
+}
+
+#urlInput {
+    padding: 10px;
+    width: 70%;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+document.getElementById('urlForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var url = document.getElementById('urlInput').value;
+    fetchSummary(url);
+});
+
+function fetchSummary(url) {
+    fetch('/generate-summary', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: url })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('summaryOutput').innerText = data.summary;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
